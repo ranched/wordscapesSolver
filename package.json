@@ -1,0 +1,15 @@
+{
+  "name": "wordscapessolver",
+  "version": "1.0.0",
+  "description": "Utility to solve word game puzzles",
+  "main": "solver.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "jasonstephenm@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
+}
