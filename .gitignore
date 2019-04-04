@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# word lists
+words_alpha.txt
+words_dictionary.json
