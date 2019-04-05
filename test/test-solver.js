@@ -2,7 +2,6 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 var solver = require('../solver.js');
 
-
 let board = [
   [1, 0, 1, 0, 0],
   [1, 0, 1, 1, 1],
@@ -30,15 +29,20 @@ describe('wordscape solver', function() {
       done();
     });
   });
-  describe('generatePermutations', function() {
+
+  describe('permutationGen', function() {
     it('is a function', function(done) {
-      expect(typeof solver.generatePermutations).to.equal('function');
+      expect(typeof solver.permutationGen).to.equal('function');
       done();
     });
     it('returns a value', function(done) {
-      expect(solver.generatePermutations([1, 2, 3], 3, 3)).to.not.equal(undefined);
+      expect(solver.permutationGen('123')).to.not.equal(undefined);
+      done();
+    });
+    it("returns correct result for '123'", function(done) {
+      let expected = ['123', '213', '312', '132', '231', '321'];
+      expect(solver.permutationGen('123')).to.eql(expected);
       done();
     });
   });
-
 });

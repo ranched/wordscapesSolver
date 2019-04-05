@@ -36,43 +36,32 @@ const findIntersections = board => {
   return intersectionMatrix;
 };
 
-const generatePermutations = (arr, size, n, results = []) =>
-  { 
-      // if size becomes 1 then prints the obtained 
-      // permutation 
-      if (size == 1) {
-          results.push(arr.join(''));
-          console.log(arr); 
-          //return results;
+function permutationGen(num) {
+  var arr = (num + '').split(''),
+    permutations = [];
+
+  function swap(a, b) {
+    var tmp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = tmp;
+  }
+
+  function generate(n) {
+    if (n == 1) {
+      if (dictionary[arr.join('')]) permutations.push(arr.join(''));
+    } else {
+      for (var i = 0; i != n; ++i) {
+        generate(n - 1);
+        swap(n % 2 ? 0 : i, n - 1);
       }
-      for (let i=0; i<size; i++) 
-      { 
-        generatePermutations(arr, size-1, n); 
+    }
+  }
 
-          // if size is odd, swap first and last 
-          // element 
-          if (size % 2 == 1) 
-          { 
-              let temp = arr[0]; 
-              arr[0] = arr[size-1]; 
-              arr[size-1] = temp; 
-          } 
-
-          // If size is even, swap ith and last 
-          // element 
-          else
-          { 
-              let temp = arr[i]; 
-              arr[i] = arr[size-1]; 
-              arr[size-1] = temp; 
-          } 
-      } 
-      //console.log(size, results);
-      return results;
-  } 
-
-
+  generate(arr.length);
+  var unique = permutations.filter((v, i, a) => a.indexOf(v) === i);
+  return unique;
+}
 
 exports.findIntersections = findIntersections;
 exports.drawSurroundingSpaces = drawSurroundingSpaces;
-exports.generatePermutations = generatePermutations;
+exports.permutationGen = permutationGen;
