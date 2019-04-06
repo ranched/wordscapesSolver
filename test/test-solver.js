@@ -1,6 +1,7 @@
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var solver = require('../solver.js');
+var pre = require('../wordsPreprocessor.js');
 
 let board = [
   [1, 0, 1, 0, 0],
@@ -40,8 +41,43 @@ describe('wordscape solver', function() {
       done();
     });
     it("returns correct result for '123'", function(done) {
-      let expected = ['123', '213', '312', '132', '231', '321'];
-      expect(solver.permutationGen('123')).to.eql(expected);
+      let expected = ['apple', 'appel', 'pepla'];
+      expect(solver.permutationGen('apple')).to.eql(expected);
+      done();
+    });
+  });
+});
+describe('wordsPreprocessor', function() {
+  describe('optimize', function() {
+    it('is a function', function(done) {
+      expect(typeof pre.optimize).to.equal('function');
+      done();
+    });
+    it('returns an object', function(done) {
+      let dictionary = { apple: 1, banana: 1 };
+      let actual = pre.optimize(dictionary);
+      expect(typeof actual).to.equal('object');
+      done();
+    });
+    it('returns an object with alphabetized keys', function(done) {
+      let dictionary = { apple: 1, banana: 1 };
+      let actual = pre.optimize(dictionary);
+      expect(actual).to.have.property('aelpp');
+      expect(actual).to.have.property('aaabnn');
+      done();
+    });
+    it('returns an object with revelent words as keys of alphabetized keys', function(done) {
+      let dictionary = { apple: 1, appel: 1, banana: 1, pepla: 1 };
+      let actual = pre.optimize(dictionary);
+      expect(actual.aelpp).to.have.property('apple');
+      expect(actual.aelpp).to.have.property('appel');
+      expect(actual.aelpp).to.have.property('pepla');
+      done();
+    });
+  });
+  describe('writeObjectToFile', function() {
+    it('is a function', function(done) {
+      expect(typeof pre.writeObjectToFile).to.equal('function');
       done();
     });
   });

@@ -63,3 +63,4 @@ typings/
 # word lists
 words_alpha.txt
 words_dictionary.json
+optimized_dictionary.json

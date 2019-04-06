@@ -4,7 +4,7 @@ const dictionary = require('./words_dictionary.json');
 const drawSurroundingSpaces = (board, i, j) => {
   let surroundingSpaces = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-  console.log('board[', i, j, ']');
+  //console.log('board[', i, j, ']');
   //
   for (let k = i - 1, a = 0; k <= i + 1; k++, a++) {
     for (let l = j - 1, b = 0; l <= j + 1; l++, b++) {
@@ -16,7 +16,7 @@ const drawSurroundingSpaces = (board, i, j) => {
       }
     }
   }
-  console.log(JSON.stringify(surroundingSpaces));
+  //console.log(JSON.stringify(surroundingSpaces));
 };
 const findIntersections = board => {
   let intersectionMatrix = Array.from(board);
@@ -37,8 +37,8 @@ const findIntersections = board => {
 };
 
 function permutationGen(num) {
-  var arr = (num + '').split(''),
-    permutations = [];
+  var arr = (num + '').split('');
+  var permutations = [];
 
   function swap(a, b) {
     var tmp = arr[a];
@@ -61,6 +61,8 @@ function permutationGen(num) {
   var unique = permutations.filter((v, i, a) => a.indexOf(v) === i);
   return unique;
 }
+
+console.log(permutationGen(123));
 
 exports.findIntersections = findIntersections;
 exports.drawSurroundingSpaces = drawSurroundingSpaces;
