@@ -10,6 +10,8 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-fs": "^2.0.0",
     "mocha": "^6.0.2"
-  }
+  },
+  "dependencies": {}
 }

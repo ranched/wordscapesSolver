@@ -14,6 +14,17 @@
 const fs = require('fs');
 const dictionary = require('./words_dictionary.json');
 
+function writeObjectToFile(path, object) {
+  fs.writeFile(path + 'optimizedDictionary.json', optimizedDictionary, function(
+    err
+  ) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('The file was saved!');
+  });
+}
+
 function optimize(dictionary) {
   let optimizedDictionary = {};
 
@@ -27,26 +38,16 @@ function optimize(dictionary) {
 
     // add the newly ordered string to an object as a key and to that key
     // add an object containing the original word as a key and 1 as a value
+    // aelpp => { aelpp: { apple: 1 }}
     if (optimizedDictionary[wordSorted]) {
       optimizedDictionary[wordSorted][word] = 1;
     } else {
       optimizedDictionary[wordSorted] = {};
       optimizedDictionary[wordSorted][word] = 1;
     }
-    console.log(word, optimizedDictionary);
   }
+  writeObjectToFile('./', optimizedDictionary);
   return optimizedDictionary;
-}
-
-function writeObjectToFile(path, object) {
-  fs.writeFile('./optimizedDictionary.json', optimizedDictionary, function(
-    err
-  ) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log('The file was saved!');
-  });
 }
 
 exports.writeObjectToFile = writeObjectToFile;
