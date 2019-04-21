@@ -2,30 +2,33 @@
 // it will iterate over every word in the word list
 // arrange the letters in alphabetical order (eg. apple => aelpp)
 // add the newly ordered string to an object as a key
-// add to that key an object containing the original word as a key and 1 as a value
+// add to that key an object containing the original word as a
+// key and 1 as a value
 
 // this facillitates faster lookups for combinations of letters in words
-// as an alternative to generating all permutations and then checking if its a word
+// as an alternative to generating all permutations and then
+// checking if its a word
 
-// This idea came from a comment on a stackexchange code review reponse about permutations
+// This idea came from a comment on a stackexchange code review
+// reponse about permutations
 // Based on Jason Goemaat's comment on Viziionary's answer in
 // https://codereview.stackexchange.com/questions/57161/generate-all-possible-combinations-of-letters-in-a-word/57893#57893
 
-const fs = require('fs');
+const fsPromises = require('fs').promises;
 const dictionary = require('./words_dictionary.json');
 
 function writeObjectToFile(path, object) {
-  fs.writeFile(path + 'optimizedDictionary.json', optimizedDictionary, function(
-    err
-  ) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log('The file was saved!');
-  });
+  return fsPromises
+    .writeFile(path, object)
+    .then(() => {
+      console.log('file saved!');
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
-function optimize(dictionary) {
+async function optimize(dictionary) {
   let optimizedDictionary = {};
 
   // it will iterate over every word in the word list
@@ -36,8 +39,9 @@ function optimize(dictionary) {
       .sort()
       .join('');
 
-    // add the newly ordered string to an object as a key and to that key
-    // add an object containing the original word as a key and 1 as a value
+    // add the newly ordered string to an object as a key and to
+    // that key add an object containing the original word as a
+    // key and 1 as a value
     // aelpp => { aelpp: { apple: 1 }}
     if (optimizedDictionary[wordSorted]) {
       optimizedDictionary[wordSorted][word] = 1;
@@ -46,7 +50,7 @@ function optimize(dictionary) {
       optimizedDictionary[wordSorted][word] = 1;
     }
   }
-  writeObjectToFile('./', optimizedDictionary);
+  await writeObjectToFile('./', optimizedDictionary);
   return optimizedDictionary;
 }
 

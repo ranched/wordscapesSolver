@@ -64,3 +64,7 @@ typings/
 words_alpha.txt
 words_dictionary.json
 optimized_dictionary.json
+
+
+# other
+.DS_Store
