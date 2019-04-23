@@ -12,16 +12,6 @@ describe('writeObjectToFile', function() {
     done();
   });
 
-  // it('returns a promise', async function() {
-  //   preprocessor
-  //     .writeObjectToFile('file.json', "{ a: 'test' }")
-  //     .then(result => {
-  //       expect(result).to.be.a('promise');
-  //     })
-  //     .then(() => fsPromises.unlink('file.json'))
-  //     .catch(err => console.log(err));
-  // });
-
   it('returns a promise', async function() {
     let result = preprocessor.writeObjectToFile('file.json', "{ a: 'test' }");
     console.log('type: ' + typeof result);
@@ -30,32 +20,32 @@ describe('writeObjectToFile', function() {
   });
 
   it('creates a file', async function() {
+    // eslint-disable-next-line
+    let data = '{"a":"test"}';
     let path = './file.json';
-    let data = "{ a: 'test' }";
-    await preprocessor.writeObjectToFile('file.json', '{"a": "test"}');
 
-    expect(path)
-      .to.be.a.file('file exists')
-      .with.content(data, 'data is correct');
+    await preprocessor.writeObjectToFile('file.json', { a: 'test' });
+
+    expect(path).to.be.a.file('file exists');
 
     await fsPromises.unlink('./file.json');
   });
 
-  it('writes correct data', function(done) {
-    let data = { aelpp: { apple: 1, appel: 1, pepla: 1 } };
+  it('writes correct data', async function() {
+    // eslint-disable-next-line
+    let data =
+      '{"aelpp":{"apple":1,"appel":1,"pepla":1},"aaabnn":{"banana":1}}';
+    let path = 'file.json';
     let dictionary = { apple: 1, appel: 1, banana: 1, pepla: 1 };
 
-    let path = 'file.json';
-    preprocessor.optimize(dictionary, path);
+    await preprocessor.optimize(dictionary, path);
+
     expect(path)
       .to.be.a.file('file exists')
       .with.content(data, 'has correct content');
-    done();
-  });
 
-  // after(function() {
-  //   fsPromises.unlink('optimizedDictionary.json');
-  // });
+    await fsPromises.unlink('file.json');
+  });
 });
 
 describe('wordsPreprocessor', function() {
