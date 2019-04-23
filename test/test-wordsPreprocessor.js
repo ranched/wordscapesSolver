@@ -12,48 +12,45 @@ describe('writeObjectToFile', function() {
     done();
   });
 
-  xit('returns a promise', async function(done) {
-    preprocessor
-      .writeObjectToFile('file.json', JSON.stringify({ a: 'test' }))
-      .then(result => {
-        expect(result).to.be.a('promise');
-      })
-      // .then(() => {
-      //   fsPromises.unlink('file.json');
-      // })
-      .then(() => {
-        done();
-      })
-      .catch(err => console.log(err));
-    // done();
+  // it('returns a promise', async function() {
+  //   preprocessor
+  //     .writeObjectToFile('file.json', "{ a: 'test' }")
+  //     .then(result => {
+  //       expect(result).to.be.a('promise');
+  //     })
+  //     .then(() => fsPromises.unlink('file.json'))
+  //     .catch(err => console.log(err));
+  // });
+
+  it('returns a promise', async function() {
+    let result = preprocessor.writeObjectToFile('file.json', "{ a: 'test' }");
+    console.log('type: ' + typeof result);
+    expect(result).to.be.a('promise');
+    return await fsPromises.unlink('file.json');
   });
 
-  it('creates a file', async function(done) {
+  it('creates a file', async function() {
     let path = './file.json';
-    let data = '{"a": "test"}';
-    preprocessor
-      .writeObjectToFile('file.json', '{"a": "test"}')
-      .then(() => {
-        expect(path)
-          .to.be.a.file('file exists')
-          .with.content(data, 'data is correct');
-      })
-      .then(() => {
-        fsPromises.unlink('./file.json');
-      })
-      .then(done)
-      .catch(err => console.log(err));
+    let data = "{ a: 'test' }";
+    await preprocessor.writeObjectToFile('file.json', '{"a": "test"}');
+
+    expect(path)
+      .to.be.a.file('file exists')
+      .with.content(data, 'data is correct');
+
+    await fsPromises.unlink('./file.json');
   });
 
-  xit('writes correct data', function(done) {
+  it('writes correct data', function(done) {
     let data = { aelpp: { apple: 1, appel: 1, pepla: 1 } };
     let dictionary = { apple: 1, appel: 1, banana: 1, pepla: 1 };
 
-    preprocessor.optimize(dictionary);
-    let path = 'optimizedDictionary.json';
+    let path = 'file.json';
+    preprocessor.optimize(dictionary, path);
     expect(path)
       .to.be.a.file('file exists')
       .with.content(data, 'has correct content');
+    done();
   });
 
   // after(function() {
@@ -73,25 +70,25 @@ describe('wordsPreprocessor', function() {
       dictionary = {};
     });
 
-    it('is a function', function(done) {
+    xit('is a function', function(done) {
       expect(preprocessor.optimize).to.be.a('function');
       done();
     });
 
-    it('returns an object', function(done) {
+    xit('returns an object', function(done) {
       let actual = preprocessor.optimize(dictionary);
       expect(actual).to.be.an('object');
       done();
     });
 
-    it('returns an object with alphabetized keys', function(done) {
+    xit('returns an object with alphabetized keys', function(done) {
       let actual = preprocessor.optimize(dictionary);
       expect(actual).to.have.property('aelpp');
       expect(actual).to.have.property('aaabnn');
       done();
     });
 
-    it('returns an object with alphabetized keys containing original words as keys', function(done) {
+    xit('returns an object with alphabetized keys containing original words as keys', function(done) {
       let actual = preprocessor.optimize(dictionary);
       expect(actual.aelpp)
         .to.have.property('apple')

@@ -18,17 +18,12 @@ const fsPromises = require('fs').promises;
 const dictionary = require('./words_dictionary.json');
 
 function writeObjectToFile(path, object) {
-  return fsPromises
-    .writeFile(path, object)
-    .then(() => {
-      console.log('file saved!');
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  return fsPromises.writeFile(path, JSON.stringify(object)).catch(err => {
+    console.log(err);
+  });
 }
 
-async function optimize(dictionary) {
+async function optimize(dictionary, newFileName) {
   let optimizedDictionary = {};
 
   // it will iterate over every word in the word list
@@ -50,8 +45,8 @@ async function optimize(dictionary) {
       optimizedDictionary[wordSorted][word] = 1;
     }
   }
-  await writeObjectToFile('./', optimizedDictionary);
-  return optimizedDictionary;
+  await writeObjectToFile(newFileName, optimizedDictionary);
+  return 0;
 }
 
 exports.writeObjectToFile = writeObjectToFile;
