@@ -23,7 +23,7 @@ function writeObjectToFile(path, object) {
   });
 }
 
-async function optimize(dictionary, newFileName) {
+function optimize(dictionary) {
   let optimizedDictionary = {};
 
   // it will iterate over every word in the word list
@@ -45,9 +45,14 @@ async function optimize(dictionary, newFileName) {
       optimizedDictionary[wordSorted][word] = 1;
     }
   }
-  await writeObjectToFile(newFileName, optimizedDictionary);
-  return 0;
+  return optimizedDictionary;
 }
 
+async function createOptimizedDictionary(dictionary, newFileName) {
+  let optimizedDictionary = optimize(dictionary);
+  await writeObjectToFile(newFileName, optimizedDictionary);
+}
+
+exports.createOptimizedDictionary = createOptimizedDictionary;
 exports.writeObjectToFile = writeObjectToFile;
 exports.optimize = optimize;
