@@ -16,9 +16,10 @@ let board = [
 describe('wordscape solver', function() {
   describe('findIntersections', function() {
     it('is a function', function(done) {
-      expect(typeof solver.findIntersections).to.equal('function');
+      expect(solver.findIntersections).to.be.a('function');
       done();
     });
+
     it('returns an array similarly sized to the input', function(done) {
       let actual = solver.findIntersections(board);
       expect(actual).to.be.an('array');
@@ -27,6 +28,31 @@ describe('wordscape solver', function() {
       done();
     });
   });
+
+  describe('findAcross', function() {
+    it('is a function', function() {
+      expect(solver.findAcross).to.be.a('function');
+    });
+
+    it('returns an object', function() {
+      let actual = solver.findAcross([]);
+      expect(actual).to.be.an('object');
+    });
+
+    it('returns empty object for empty row', function() {
+      let actual = solver.findAcross([]);
+      expect(actual).to.not.have.own.property('1');
+    });
+
+    it('finds word in row', function() {
+      let actual = solver.findAcross([[1, 1, 1, 1, 1]]);
+      expect(actual)
+        .to.have.own.property('1')
+        .that.is.an('array');
+      expect(actual['1']).to.eql([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]);
+    });
+  });
+
   describe('drawSurroundingSpaces', function() {
     it('is a function', function(done) {
       expect(typeof solver.drawSurroundingSpaces).to.equal('function');
@@ -34,7 +60,7 @@ describe('wordscape solver', function() {
     });
   });
 
-  describe('permutationGen', function() {
+  xdescribe('permutationGen', function() {
     it('is a function', function(done) {
       expect(typeof solver.permutationGen).to.equal('function');
       done();

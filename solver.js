@@ -36,34 +36,51 @@ const findIntersections = board => {
   return intersectionMatrix;
 };
 
-function permutationGen(num) {
-  var arr = (num + '').split('');
-  var permutations = [];
+function findAcross(board) {
+  if (!board || !board[0]) return {};
 
-  function swap(a, b) {
-    var tmp = arr[a];
-    arr[a] = arr[b];
-    arr[b] = tmp;
-  }
+  let words = {};
+  let currentWordNumber = 1;
+  let currentWord = [];
 
-  function generate(n) {
-    if (n == 1) {
-      if (dictionary[arr.join('')]) permutations.push(arr.join(''));
-    } else {
-      for (var i = 0; i != n; ++i) {
-        generate(n - 1);
-        swap(n % 2 ? 0 : i, n - 1);
-      }
+  for (let i = 0; i <= board[0].length; i++) {
+    if (board[0][i] === 1 && (board[0][i - 1] === 1 || board[0][i + 1] === 1)) {
+      currentWord.push([0, i]);
+    } else if (currentWord.length !== 0) {
+      words[currentWordNumber] = currentWord;
+      currentWordNumber++;
+      currentWord = [];
     }
   }
-
-  generate(arr.length);
-  var unique = permutations.filter((v, i, a) => a.indexOf(v) === i);
-  return unique;
+  return words;
 }
+// function permutationGen(num) {
+//   var arr = (num + '').split('');
+//   var permutations = [];
 
-console.log(permutationGen(123));
+//   function swap(a, b) {
+//     var tmp = arr[a];
+//     arr[a] = arr[b];
+//     arr[b] = tmp;
+//   }
+
+//   function generate(n) {
+//     if (n == 1) {
+//       if (dictionary[arr.join('')]) permutations.push(arr.join(''));
+//     } else {
+//       for (var i = 0; i != n; ++i) {
+//         generate(n - 1);
+//         swap(n % 2 ? 0 : i, n - 1);
+//       }
+//     }
+//   }
+
+//   generate(arr.length);
+//   var unique = permutations.filter((v, i, a) => a.indexOf(v) === i);
+//   return unique;
+// }
 
 exports.findIntersections = findIntersections;
 exports.drawSurroundingSpaces = drawSurroundingSpaces;
-exports.permutationGen = permutationGen;
+exports.findAcross = findAcross;
+// exports.permutationGen = permutationGen;
