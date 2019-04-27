@@ -44,12 +44,23 @@ describe('wordscape solver', function() {
       expect(actual).to.not.have.own.property('1');
     });
 
-    it('finds word in row', function() {
+    it('finds a word in row', function() {
       let actual = solver.findAcross([[1, 1, 1, 1, 1]]);
       expect(actual)
         .to.have.own.property('1')
         .that.is.an('array');
       expect(actual['1']).to.eql([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]);
+    });
+    it('finds two words in a row', function() {
+      let actual = solver.findAcross([[1, 1, 0, 1, 1]]);
+      expect(actual['1']).to.eql([[0, 0], [0, 1]]);
+      expect(actual['2']).to.eql([[0, 3], [0, 4]]);
+    });
+    it('finds words in multiple rows', function() {
+      let actual = solver.findAcross([[1, 1, 1, 1, 1], [1, 1, 0, 1, 1]]);
+      expect(actual['1']).to.eql([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]);
+      expect(actual['2']).to.eql([[1, 0], [1, 1]]);
+      expect(actual['2']).to.eql([[1, 3], [1, 4]]);
     });
   });
 
