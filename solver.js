@@ -43,15 +43,20 @@ function findAcross(board) {
   let currentWordNumber = 1;
   let currentWord = [];
 
-  for (let i = 0; i <= board[0].length; i++) {
-    // if theres something in the first space OR if the previous/next space has something
-    if (board[0][i] === 1 && (board[0][i - 1] === 1 || board[0][i + 1] === 1)) {
-      currentWord.push([0, i]);
-    } else if (currentWord.length !== 0) {
-      console.log(i, words, currentWord);
-      words[currentWordNumber] = currentWord;
-      currentWordNumber++;
-      currentWord = [];
+  for (let j = 0; j < board.length; j++) {
+    for (let i = 0; i <= board[j].length; i++) {
+      // if theres something in the first space OR if the previous/next space has something
+      if (
+        board[j][i] === 1 &&
+        (board[j][i - 1] === 1 || board[j][i + 1] === 1)
+      ) {
+        currentWord.push([j, i]);
+      } else if (currentWord.length !== 0) {
+        console.log(i, words, currentWord);
+        words[currentWordNumber] = currentWord;
+        currentWordNumber++;
+        currentWord = [];
+      }
     }
   }
   console.log('wordsObj:', words);

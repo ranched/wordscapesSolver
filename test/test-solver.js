@@ -64,7 +64,7 @@ describe('wordscape solver', function() {
       let actual = solver.findAcross([[1, 1, 1, 1, 1], [1, 1, 0, 1, 1]]);
       expect(actual['1']).to.eql([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]);
       expect(actual['2']).to.eql([[1, 0], [1, 1]]);
-      expect(actual['2']).to.eql([[1, 3], [1, 4]]);
+      expect(actual['3']).to.eql([[1, 3], [1, 4]]);
     });
   });
 
