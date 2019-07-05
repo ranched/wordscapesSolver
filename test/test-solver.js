@@ -56,6 +56,10 @@ describe('wordscape solver', function() {
       expect(actual['1']).to.eql([[0, 0], [0, 1]]);
       expect(actual['2']).to.eql([[0, 3], [0, 4]]);
     });
+    it('does not find single letters in a row', function() {
+      let actual = solver.findAcross([[0, 1, 0, 1, 0]]);
+      expect(actual['1']).to.not.exist;
+    });
     it('finds words in multiple rows', function() {
       let actual = solver.findAcross([[1, 1, 1, 1, 1], [1, 1, 0, 1, 1]]);
       expect(actual['1']).to.eql([[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]);

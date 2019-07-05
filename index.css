@@ -1,0 +1,53 @@
+table {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+table td {
+  border: 1px solid black;
+  padding: 15px;
+}
+
+.wrapper {
+  display: grid;
+  grid-gap: 10px;
+  background-color: #fff;
+  color: #444;
+}
+
+.left-sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  width: 10%;
+  justify-self: right;
+}
+
+.right-sidebar {
+  grid-column: 3;
+  grid-row: 2;
+  width: 10%;
+  justify-self: left;
+}
+
+.content {
+  grid-area: content;
+}
+
+.header {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.footer {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.active {
+  background: rgb(186, 228, 186);
+}
+
+td {
+  width: 10%;
+  height: 10px;
+}
