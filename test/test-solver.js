@@ -68,6 +68,59 @@ describe('wordscape solver', function() {
     });
   });
 
+  describe('findDown', function() {
+    it('is a function', function() {
+      expect(solver.findDown).to.be.a('function');
+    });
+
+    it('returns an object', function() {
+      let actual = solver.findDown([]);
+      expect(actual).to.be.an('object');
+    });
+
+    it('returns empty object for empty column', function() {
+      let actual = solver.findDown([[], []]);
+      expect(actual).to.not.have.own.property('1');
+    });
+
+    it('finds a word in a column', function() {
+      let actual = solver.findDown([[1, 0], [1, 0]]);
+      expect(actual)
+        .to.have.own.property('1')
+        .that.is.an('array');
+      expect(actual['1']).to.eql([[0, 0], [1, 0]]);
+    });
+
+    it('finds multiple words in a column', function() {
+      let actual = solver.findDown([
+        [0, 0],
+        [1, 0],
+        [1, 0],
+        [0, 0],
+        [1, 0],
+        [1, 0]
+      ]);
+      expect(actual).to.have.own.all.keys('1', '2');
+      expect(actual['1']).to.eql([[1, 0], [2, 0]]);
+      expect(actual['2']).to.eql([[4, 0], [5, 0]]);
+    });
+
+    it('finds multiple words in multiple columns', function() {
+      let actual = solver.findDown([
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [1, 1],
+        [1, 0]
+      ]);
+      expect(actual).to.have.own.all.keys('1', '2', '3');
+      expect(actual['1']).to.eql([[1, 0], [2, 0]]);
+      expect(actual['2']).to.eql([[4, 0], [5, 0]]);
+      expect(actual['3']).to.eql([[2, 1], [3, 1], [4, 1]]);
+    });
+  });
+
   describe('drawSurroundingSpaces', function() {
     it('is a function', function(done) {
       expect(typeof solver.drawSurroundingSpaces).to.equal('function');

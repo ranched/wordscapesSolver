@@ -36,6 +36,12 @@ const findIntersections = board => {
   return intersectionMatrix;
 };
 
+/**
+ * @param {array} board represented by two dimentional array
+ * @returns {object} key value pairs with keys being the nth word found and
+ *      the value being an array containing all indices in the board array
+ *      which contain a letter of that word
+ */
 function findAcross(board) {
   if (!board || !board[0]) return {};
 
@@ -45,21 +51,84 @@ function findAcross(board) {
 
   for (let j = 0; j < board.length; j++) {
     for (let i = 0; i <= board[j].length; i++) {
-      // if theres something in the first space OR if the previous/next space has something
+      // if theres a '1' in the space AND the previous or next space in
+      // the row also has the value of '1'
       if (
         board[j][i] === 1 &&
         (board[j][i - 1] === 1 || board[j][i + 1] === 1)
       ) {
+        // add the index to the current word array
         currentWord.push([j, i]);
+        // if there's not a current work being worked on
+        // move on to the next space, otherwise we just finished
+        // iterating over a word and we need to put it in the words
+        // object to be returned
       } else if (currentWord.length !== 0) {
-        console.log(i, words, currentWord);
+        //console.log(i, words, currentWord);
         words[currentWordNumber] = currentWord;
         currentWordNumber++;
         currentWord = [];
       }
     }
   }
-  console.log('wordsObj:', words);
+  return words;
+}
+function findDown(board) {
+  if (!board || !board[0]) return {};
+
+  let words = {};
+  let currentWordNumber = 1;
+  let currentWord = [];
+
+  const cutNewWord = () => {
+    words[currentWordNumber] = currentWord;
+    currentWordNumber++;
+    currentWord = [];
+  };
+
+  for (let j = 0; j < board[0].length; j++) {
+    for (let i = 0; i < board.length; i++) {
+      let previousRow = board[i - 1];
+      let currentRow = board[i];
+      let nextRow = board[i + 1];
+      let currentColumn = j;
+
+      if (!previousRow) {
+        console.log('no previous row exists');
+        //first row case
+        // if this is the first row and the beginning of a word
+        if (currentRow[currentColumn] === 1 && nextRow[currentColumn] === 1) {
+          currentWord.push([i, currentColumn]);
+        }
+      } else if (previousRow && nextRow) {
+        console.log('prev and next row exist');
+        //middle rows case
+        // check if this is the continuation of a word OR if we're starting a new word
+        if (
+          currentRow[currentColumn] === 1 &&
+          (previousRow[currentColumn] || nextRow[currentColumn] === 1)
+        ) {
+          currentWord.push([i, currentColumn]);
+        } else if (currentWord.length !== 0) {
+          cutNewWord();
+        }
+      } else {
+        console.log('should be last row');
+        //last row case
+        // if this row and the previous both had the value of '1' add it to the current word
+        if (currentRow[currentColumn] === 1 && previousRow[currentColumn]) {
+          currentWord.push([i, currentColumn]);
+        }
+        // if this is a continuation of a word add it to the list
+        if (currentWord.length !== 0) {
+          console.log('last row cut word');
+          cutNewWord();
+        }
+      }
+      console.log('i ', i, ' words:', words);
+      console.log('currentWord:', currentWord);
+    }
+  }
   return words;
 }
 // function permutationGen(num) {
@@ -91,4 +160,5 @@ function findAcross(board) {
 exports.findIntersections = findIntersections;
 exports.drawSurroundingSpaces = drawSurroundingSpaces;
 exports.findAcross = findAcross;
+exports.findDown = findDown;
 // exports.permutationGen = permutationGen;
