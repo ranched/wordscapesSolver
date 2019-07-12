@@ -1,7 +1,7 @@
 // Wordscapes solver v0.1
-const dictionary = require('./words_dictionary.json');
+//const dictionary = require('../../words_dictionary.json');
 
-const drawSurroundingSpaces = (board, i, j) => {
+function drawSurroundingSpaces(board, i, j) {
   let surroundingSpaces = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
   //console.log('board[', i, j, ']');
@@ -17,8 +17,8 @@ const drawSurroundingSpaces = (board, i, j) => {
     }
   }
   //console.log(JSON.stringify(surroundingSpaces));
-};
-const findIntersections = board => {
+}
+function findIntersections(board) {
   let intersectionMatrix = Array.from(board);
 
   // takes a surrounding spaces array and determins if this
@@ -34,7 +34,7 @@ const findIntersections = board => {
     }
   }
   return intersectionMatrix;
-};
+}
 
 /**
  * @param {array} board represented by two dimentional array
@@ -42,7 +42,7 @@ const findIntersections = board => {
  *      the value being an array containing all indices in the board array
  *      which contain a letter of that word
  */
-function findAcross(board) {
+const findAcross = board => {
   if (!board || !board[0]) return {};
 
   let words = {};
@@ -72,8 +72,9 @@ function findAcross(board) {
     }
   }
   return words;
-}
-function findDown(board) {
+};
+
+const findDown = board => {
   if (!board || !board[0]) return {};
 
   let words = {};
@@ -94,14 +95,14 @@ function findDown(board) {
       let currentColumn = j;
 
       if (!previousRow) {
-        console.log('no previous row exists');
+        //console.log('no previous row exists');
         //first row case
         // if this is the first row and the beginning of a word
         if (currentRow[currentColumn] === 1 && nextRow[currentColumn] === 1) {
           currentWord.push([i, currentColumn]);
         }
       } else if (previousRow && nextRow) {
-        console.log('prev and next row exist');
+        //console.log('prev and next row exist');
         //middle rows case
         // check if this is the continuation of a word OR if we're starting a new word
         if (
@@ -113,7 +114,7 @@ function findDown(board) {
           cutNewWord();
         }
       } else {
-        console.log('should be last row');
+        //console.log('should be last row');
         //last row case
         // if this row and the previous both had the value of '1' add it to the current word
         if (currentRow[currentColumn] === 1 && previousRow[currentColumn]) {
@@ -125,40 +126,19 @@ function findDown(board) {
           cutNewWord();
         }
       }
-      console.log('i ', i, ' words:', words);
-      console.log('currentWord:', currentWord);
     }
   }
   return words;
-}
-// function permutationGen(num) {
-//   var arr = (num + '').split('');
-//   var permutations = [];
+};
 
-//   function swap(a, b) {
-//     var tmp = arr[a];
-//     arr[a] = arr[b];
-//     arr[b] = tmp;
-//   }
+const findWords = puzzleLayout => {
+  let words = {
+    across: findAcross(puzzleLayout),
+    down: findDown(puzzleLayout)
+  };
+  return words;
+};
 
-//   function generate(n) {
-//     if (n == 1) {
-//       if (dictionary[arr.join('')]) permutations.push(arr.join(''));
-//     } else {
-//       for (var i = 0; i != n; ++i) {
-//         generate(n - 1);
-//         swap(n % 2 ? 0 : i, n - 1);
-//       }
-//     }
-//   }
-
-//   generate(arr.length);
-//   var unique = permutations.filter((v, i, a) => a.indexOf(v) === i);
-//   return unique;
-// }
-
-exports.findIntersections = findIntersections;
-exports.drawSurroundingSpaces = drawSurroundingSpaces;
 exports.findAcross = findAcross;
 exports.findDown = findDown;
-// exports.permutationGen = permutationGen;
+exports.findWords = findWords;

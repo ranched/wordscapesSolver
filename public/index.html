@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <link href="css/index.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <button class="header" id="addRowTopButton">+</button>
+      <button class="left-sidebar side" id="addColumnLeftButton">+</button>
+      <table class="content" id="crosswordTable">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <button class="right-sidebar side" id="addColumnRightButton">+</button>
+      <button class="footer" id="addRowBottomButton">+</button>
+    </div>
+    <div>
+      <button id="findWords">find words</button>
+    </div>
+    <script type="module" src="js/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </body>
+</html>

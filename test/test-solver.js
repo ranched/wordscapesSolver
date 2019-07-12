@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var chai = require('chai');
 chai.use(require('chai-fs'));
 
-var solver = require('../solver.js');
+var solver = require('../public/js/solver.js');
 
 let board = [
   [1, 0, 1, 0, 0],

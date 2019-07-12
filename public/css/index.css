@@ -36,11 +36,13 @@ table td {
 .header {
   grid-column: 2;
   grid-row: 1;
+  height: 10%;
 }
 
 .footer {
   grid-column: 2;
   grid-row: 3;
+  height: 10%;
 }
 
 .active {
