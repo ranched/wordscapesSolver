@@ -1,5 +1,6 @@
 // Wordscapes solver v0.1
 //const dictionary = require('../../words_dictionary.json');
+const optimizedDictionary = require('../optimized_dictionary.json');
 
 function drawSurroundingSpaces(board, i, j) {
   let surroundingSpaces = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -122,7 +123,7 @@ const findDown = board => {
         }
         // if this is a continuation of a word add it to the list
         if (currentWord.length !== 0) {
-          console.log('last row cut word');
+          //console.log('last row cut word');
           cutNewWord();
         }
       }
@@ -131,12 +132,19 @@ const findDown = board => {
   return words;
 };
 
-const findWords = puzzleLayout => {
-  let words = {
-    across: findAcross(puzzleLayout),
-    down: findDown(puzzleLayout)
-  };
+const queryDictionary = letters => {
+  let words = optimizedDictionary[letters];
   return words;
+};
+
+const findWords = boardAndLetters => {
+  let words = queryDictionary(boardAndLetters.letters);
+  let solutions = {
+    across: findAcross(boardAndLetters.puzzleLayout),
+    down: findDown(boardAndLetters.puzzleLayout),
+    words: words
+  };
+  return solutions;
 };
 
 exports.findAcross = findAcross;

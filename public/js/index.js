@@ -85,9 +85,11 @@ function buildCrosswordArray() {
 }
 
 function getWords() {
+  let inputLetters = document.getElementById('letters').value;
   axios
     .post('/words', {
-      puzzleLayout: buildCrosswordArray()
+      puzzleLayout: buildCrosswordArray(),
+      letters: inputLetters
     })
     .then(res => {
       console.log(res.data);
