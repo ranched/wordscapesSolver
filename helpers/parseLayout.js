@@ -1,6 +1,7 @@
 // Wordscapes solver v0.1
 //const dictionary = require('../../words_dictionary.json');
 const optimizedDictionary = require('../optimized_dictionary.json');
+var jsCombinatorics = require('js-combinatorics');
 
 function drawSurroundingSpaces(board, i, j) {
   let surroundingSpaces = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -137,14 +138,93 @@ const queryDictionary = letters => {
   return words;
 };
 
-const findWords = boardAndLetters => {
-  let words = queryDictionary(boardAndLetters.letters);
-  let solutions = {
-    across: findAcross(boardAndLetters.puzzleLayout),
-    down: findDown(boardAndLetters.puzzleLayout),
-    words: words
+const getWordLengthsFromSlots = slots => {
+  let allWordLengths = [
+    ...Object.values(slots.across),
+    ...Object.values(slots.down)
+  ].map(arr => arr.length);
+
+  let lengths = new Set(allWordLengths).values();
+  let lengthsArr = [];
+
+  for (value of lengths) {
+    lengthsArr.push(value);
+  }
+
+  return lengthsArr;
+};
+
+const getWordSlotsFromBoardLayout = puzzleLayout => {
+  return {
+    across: findAcross(puzzleLayout),
+    down: findDown(puzzleLayout)
   };
-  return solutions;
+};
+
+// generate letter combinations for given letters, lengths min -> 7
+/**
+ * @param {array} wordLengths array of numbers
+ * @param {array} letters array of characters
+ * @param {number} min
+ * @returns {object} wordLength as the key
+ *      and the value being an array of letter
+ *      combination arrays of the current wordLength
+ */
+const generateCombinations = (wordLengths, letters, min = 3) => {
+  // console.log(typeof wordLengths[0]);
+  // console.log(Array.isArray(letters));
+  let combinations = {};
+
+  // add all letter combinations of various lengths to the combinations object
+  wordLengths.reduce((acc, cur) => {
+    if (cur >= min) {
+      //generate combinations for the current length
+      let currentLengthCombinations = jsCombinatorics
+        .combination(letters, cur)
+        .toArray();
+      // store the result in the combinations
+      acc[cur] = currentLengthCombinations;
+    }
+    return acc;
+  }, combinations);
+
+  return combinations;
+};
+
+// query the optimized dictionary for possible words of
+const getPossibleWords = (wordLengths, letters) => {
+  //let words = {};
+  let letterCombosToCheckAgainstDict = generateCombinations(
+    wordLengths,
+    letters
+  );
+  //solutions.possibleWords = queryDictionary(boardAndLetters.letters);
+
+  return letterCombosToCheckAgainstDict;
+};
+
+const findWords = boardAndLetters => {
+  const { puzzleLayout, letters } = boardAndLetters;
+  let solution = {
+    error: '',
+    words: {}
+  };
+
+  if (puzzleLayout.filter(arr => arr.includes(1)).length === 0) {
+    solution.error += ' - no board layout provided';
+    return solution;
+  }
+  if (letters.length == 0) {
+    solution.error += ' - no letters provided';
+    return solution;
+  }
+
+  let wordSlots = getWordSlotsFromBoardLayout(puzzleLayout);
+  let wordLengths = getWordLengthsFromSlots(wordSlots);
+
+  solution.words = getPossibleWords(wordLengths, letters.split(''));
+
+  return solution;
 };
 
 exports.findAcross = findAcross;
