@@ -198,9 +198,34 @@ const getPossibleWords = (wordLengths, letters) => {
     wordLengths,
     letters
   );
+  let dictionaryWords = {};
+  wordLengths.forEach(length => {
+    dictionaryWords[length] = [];
+  });
+
+  Object.entries(letterCombosToCheckAgainstDict)
+    // for each word length
+    .forEach(lengthAndComboTuple => {
+      let length = lengthAndComboTuple[0];
+      let combos = lengthAndComboTuple[1];
+      // for each combo of this length
+      combos.forEach(combo => {
+        let sortedCombo = combo.sort().join('');
+        // check if this sorted combination appears in the optimized dictionary index
+        let foundDictionaryWords = optimizedDictionary[sortedCombo];
+        if (foundDictionaryWords) {
+          // if it does add it, add the dictionary words associated with this
+          // combo to the dictionary words found
+          dictionaryWords[length] = [
+            ...dictionaryWords[length],
+            ...Object.keys(foundDictionaryWords)
+          ];
+        }
+      });
+    });
   //solutions.possibleWords = queryDictionary(boardAndLetters.letters);
 
-  return letterCombosToCheckAgainstDict;
+  return dictionaryWords;
 };
 
 const findWords = boardAndLetters => {
@@ -209,19 +234,24 @@ const findWords = boardAndLetters => {
     error: '',
     words: {}
   };
-
+  // if empty board layout passed in
   if (puzzleLayout.filter(arr => arr.includes(1)).length === 0) {
     solution.error += ' - no board layout provided';
     return solution;
   }
+  // if no letters passed in
   if (letters.length == 0) {
     solution.error += ' - no letters provided';
     return solution;
   }
 
+  // find word slots in board layout
   let wordSlots = getWordSlotsFromBoardLayout(puzzleLayout);
+
+  // find word lengths from given word slots
   let wordLengths = getWordLengthsFromSlots(wordSlots);
 
+  //
   solution.words = getPossibleWords(wordLengths, letters.split(''));
 
   return solution;

@@ -57,11 +57,11 @@ function addColumn(index) {
     .getElementsByTagName('tr');
 
   for (let row of rowsRef) {
+    // Insert a cell in the row at index
     let newCell = row.insertCell(index);
     newCell.appendChild(document.createTextNode(''));
     newCell.addEventListener('click', toggleSelected);
   }
-  // Insert a cell in the row at index 0
 }
 
 function toggleSelected() {
@@ -93,6 +93,37 @@ function getWords() {
     })
     .then(res => {
       console.log(res.data);
+      displayWords(res.data.words);
     })
     .catch(err => console.log(err));
+}
+
+function displayWords(wordsObject) {
+  let lengths = Object.keys(wordsObject);
+
+  // // create table
+  // var table = document.createElement('table');
+
+  // // crate row for headers
+  // var tr = table.insertRow(-1);
+  // var tr2 = table.insertRow(-1);
+
+  // // push headers into table
+  // for (var i = 0; i < lengths.length; i++) {
+  //   // TABLE HEADER.
+  //   var th = document.createElement('th');
+  //   th.innerHTML = lengths[i];
+  //   tr.appendChild(th);
+  //   var td = document.createElement('td');
+  //   tr2.appendChild(td);
+  //   td.innerHTMl = wordsObject[lengths[i]].join(' ');
+  // }
+
+  // document.body.appendChild(table);
+
+  for (let i = 0; i < lengths.length; i++) {
+    let para = document.createElement('p');
+    para.innerHTML = lengths[i] + ': ' + wordsObject[lengths[i]].join(' ');
+    document.body.appendChild(para);
+  }
 }
