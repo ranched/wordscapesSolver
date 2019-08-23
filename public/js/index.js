@@ -104,7 +104,7 @@ function displayWords(wordsObject) {
   // // create table
   // var table = document.createElement('table');
 
-  // // crate row for headers
+  // // create row for headers
   // var tr = table.insertRow(-1);
   // var tr2 = table.insertRow(-1);
 
