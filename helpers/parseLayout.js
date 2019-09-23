@@ -6,19 +6,16 @@ var jsCombinatorics = require('js-combinatorics');
 function drawSurroundingSpaces(board, i, j) {
   let surroundingSpaces = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-  //console.log('board[', i, j, ']');
   //
   for (let k = i - 1, a = 0; k <= i + 1; k++, a++) {
     for (let l = j - 1, b = 0; l <= j + 1; l++, b++) {
       if (k >= 0 && l >= 0 && k < board.length) {
-        //console.log('a:', a, 'b:', b);
         if (board[k][l]) {
           surroundingSpaces[a][b] = 1;
         }
       }
     }
   }
-  //console.log(JSON.stringify(surroundingSpaces));
 }
 function findIntersections(board) {
   let intersectionMatrix = Array.from(board);
@@ -39,8 +36,8 @@ function findIntersections(board) {
 }
 
 /**
- * @param {array} board represented by two dimentional array
- * @returns {object} key value pairs with keys being the nth word found and
+ * @param {array} board two dimentional array
+ * @returns {object} key value pairs with keys being the number of the nth word found and
  *      the value being an array containing all indices in the board array
  *      which contain a letter of that word
  */
@@ -66,7 +63,6 @@ const findAcross = board => {
         // iterating over a word and we need to put it in the words
         // object to be returned
       } else if (currentWord.length !== 0) {
-        //console.log(i, words, currentWord);
         words[currentWordNumber] = currentWord;
         currentWordNumber++;
         currentWord = [];
@@ -76,6 +72,12 @@ const findAcross = board => {
   return words;
 };
 
+/**
+ * @param {array} board represented by two dimentional array
+ * @returns {object} key value pairs with keys being the nth word found and
+ *      the value being an array containing all indices in the board array
+ *      which contain a letter of that word
+ */
 const findDown = board => {
   if (!board || !board[0]) return {};
 
@@ -97,15 +99,13 @@ const findDown = board => {
       let currentColumn = j;
 
       if (!previousRow) {
-        //console.log('no previous row exists');
-        //first row case
+        // if no previous row exists
         // if this is the first row and the beginning of a word
         if (currentRow[currentColumn] === 1 && nextRow[currentColumn] === 1) {
           currentWord.push([i, currentColumn]);
         }
       } else if (previousRow && nextRow) {
-        //console.log('prev and next row exist');
-        //middle rows case
+        // if prev and next row exist
         // check if this is the continuation of a word OR if we're starting a new word
         if (
           currentRow[currentColumn] === 1 &&
@@ -116,15 +116,13 @@ const findDown = board => {
           cutNewWord();
         }
       } else {
-        //console.log('should be last row');
-        //last row case
+        // this should be last row
         // if this row and the previous both had the value of '1' add it to the current word
         if (currentRow[currentColumn] === 1 && previousRow[currentColumn]) {
           currentWord.push([i, currentColumn]);
         }
         // if this is a continuation of a word add it to the list
         if (currentWord.length !== 0) {
-          //console.log('last row cut word');
           cutNewWord();
         }
       }
@@ -171,19 +169,30 @@ const getWordSlotsFromBoardLayout = puzzleLayout => {
  *      combination arrays of the current wordLength
  */
 const generateCombinations = (wordLengths, letters, min = 3) => {
-  // console.log(typeof wordLengths[0]);
-  // console.log(Array.isArray(letters));
+  if (
+    !Array.isArray(wordLengths) ||
+    !Array.isArray(letters) ||
+    !wordLengths ||
+    !letters
+  ) {
+    throw new TypeError(
+      'wordLengths and letters are required arguments and must be arrays'
+    );
+  }
   let combinations = {};
-
   // add all letter combinations of various lengths to the combinations object
-  wordLengths.reduce((acc, cur) => {
-    if (cur >= min) {
+  wordLengths.reduce((acc, len) => {
+    if (len >= min) {
       //generate combinations for the current length
       let currentLengthCombinations = jsCombinatorics
-        .combination(letters, cur)
+        .combination(letters, len)
         .toArray();
+      lenCombosObj = currentLengthCombinations.reduce((acc, cur) => {
+        acc[cur.sort().join('')] = len;
+        return acc;
+      }, {});
       // store the result in the combinations
-      acc[cur] = currentLengthCombinations;
+      acc[len] = lenCombosObj;
     }
     return acc;
   }, combinations);
@@ -207,12 +216,15 @@ const getPossibleWords = (wordLengths, letters) => {
     // for each word length
     .forEach(lengthAndComboTuple => {
       let length = lengthAndComboTuple[0];
-      let combos = lengthAndComboTuple[1];
+      let combos = Object.keys(lengthAndComboTuple[1]);
       // for each combo of this length
       combos.forEach(combo => {
-        let sortedCombo = combo.sort().join('');
+        let sortedCombo = combo
+          .split('')
+          .sort()
+          .join('');
         // check if this sorted combination appears in the optimized dictionary index
-        let foundDictionaryWords = optimizedDictionary[sortedCombo];
+        let foundDictionaryWords = queryDictionary(sortedCombo);
         if (foundDictionaryWords) {
           // if it does add it, add the dictionary words associated with this
           // combo to the dictionary words found
@@ -223,17 +235,20 @@ const getPossibleWords = (wordLengths, letters) => {
         }
       });
     });
-  //solutions.possibleWords = queryDictionary(boardAndLetters.letters);
 
   return dictionaryWords;
 };
 
 const findWords = boardAndLetters => {
-  const { puzzleLayout, letters } = boardAndLetters;
   let solution = {
     error: '',
     words: {}
   };
+  if (!boardAndLetters) {
+    solution.error = ' - no board and letters provided';
+    return solution;
+  }
+  const { puzzleLayout, letters } = boardAndLetters;
   // if empty board layout passed in
   if (puzzleLayout.filter(arr => arr.includes(1)).length === 0) {
     solution.error += ' - no board layout provided';
@@ -244,19 +259,56 @@ const findWords = boardAndLetters => {
     solution.error += ' - no letters provided';
     return solution;
   }
-
   // find word slots in board layout
   let wordSlots = getWordSlotsFromBoardLayout(puzzleLayout);
 
   // find word lengths from given word slots
   let wordLengths = getWordLengthsFromSlots(wordSlots);
 
-  //
+  // check to make sure there are enough letters to make the longest word
+  if (letters.length < Math.max.apply(null, wordLengths)) {
+    solution.error += ' - not enough letters provided';
+    return solution;
+  }
+
   solution.words = getPossibleWords(wordLengths, letters.split(''));
 
   return solution;
 };
 
+const combineBoards = (boardA, boardB) => {
+  let equalRows = boardA.length === boardB.length;
+  let equalColumns = boardA[0].length === boardB[0].length;
+  let combinedBoard = [];
+  if (equalRows && equalColumns) {
+    // make a new blank board the same size as the input boards
+    for (let rows = 0; rows < boardA.length; rows++) {
+      combinedBoard.push([]);
+    }
+    // fill the combined board if the value of A or B is 1
+    for (let i = 0; i < boardA.length; i++) {
+      for (let j = 0; j < boardA[0].length; j++) {
+        // if A or B has a value, fill the combined board
+        combinedBoard[i][j] = boardA[i][j] || boardB[i][j];
+        // force boolean to integer
+        combinedBoard[i][j] = combinedBoard[i][j] | 0;
+        //console.log(combinedBoard[i][j]);
+      }
+    }
+  }
+  return combinedBoard;
+};
+
+const findSolutions = (board, wordSlots, letters) => {
+  return [];
+};
+
+exports.drawSurroundingSpaces = drawSurroundingSpaces; // for testing
+exports.findIntersections = findIntersections;
+exports.generateCombinations = generateCombinations; // for testing
+exports.queryDictionary = queryDictionary; // for testing
+exports.combineBoards = combineBoards; // for testing
 exports.findAcross = findAcross;
 exports.findDown = findDown;
 exports.findWords = findWords;
+exports.findSolutions = findSolutions;

@@ -18,9 +18,7 @@ const fsPromises = require('fs').promises;
 const dictionary = require('./words_dictionary.json');
 
 function writeObjectToFile(path, object) {
-  return fsPromises.writeFile(path, JSON.stringify(object)).catch(err => {
-    console.log(err);
-  });
+  return fsPromises.writeFile(path, JSON.stringify(object));
 }
 
 function optimize(dictionary) {
@@ -50,7 +48,10 @@ function optimize(dictionary) {
 
 async function createOptimizedDictionary(dictionary, newFileName) {
   let optimizedDictionary = optimize(dictionary);
-  await writeObjectToFile(newFileName, optimizedDictionary);
+  if (!dictionary || !newFileName) {
+    throw new Error('Invalid parameters to createOptimizedDictionary');
+  }
+  return writeObjectToFile(newFileName, optimizedDictionary);
 }
 
 exports.createOptimizedDictionary = createOptimizedDictionary;

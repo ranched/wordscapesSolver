@@ -14,7 +14,7 @@ let board = [
 ];
 
 describe('parseLayout', function() {
-  xdescribe('findIntersections', function() {
+  describe('findIntersections', function() {
     it('is a function', function(done) {
       expect(solver.findIntersections).to.be.a('function');
       done();
@@ -126,20 +126,178 @@ describe('parseLayout', function() {
       expect(typeof solver.drawSurroundingSpaces).to.equal('function');
       done();
     });
+
+    it('returns an object', function(done) {
+      expect('function return value').to.be.an('object');
+      done();
+    });
   });
 
-  xdescribe('permutationGen', function() {
+  describe('findWords', function() {
     it('is a function', function(done) {
-      expect(typeof solver.permutationGen).to.equal('function');
+      expect(typeof solver.findWords).to.equal('function');
+      done();
+    });
+
+    it('returns an object', function(done) {
+      expect(solver.findWords()).to.be.an('object');
+      done();
+    });
+
+    it('returns an object with word and error properties', function(done) {
+      let boardAndLetters = { puzzleLayout: board, letters: 'abcd' };
+      let solution = solver.findWords(boardAndLetters);
+      expect(solution).to.have.property('error');
+      expect(solution).to.have.property('words');
+      done();
+    });
+
+    it('returns an error when not passed required arguments', function(done) {
+      let boardArg = { puzzleLayout: board, letters: '' };
+      let lettersArg = { puzzleLayout: [], letters: '' };
+      let solution1 = solver.findWords(lettersArg);
+      let solution2 = solver.findWords(boardArg);
+      expect(solution1)
+        .to.have.property('error')
+        .that.equals(' - no board layout provided');
+      expect(solution2)
+        .to.have.property('error')
+        .that.equals(' - no letters provided');
+      done();
+    });
+
+    it('returns an error if number of letters less than longest word slot', function(done) {
+      let boardAndLetters = { puzzleLayout: board, letters: 'abc' };
+      let solution = solver.findWords(boardAndLetters);
+      expect(solution)
+        .to.have.property('error')
+        .that.equals(' - not enough letters provided');
+      done();
+    });
+
+    it('returns correct words given letters and board', function(done) {
+      let boardAndLetters = {
+        puzzleLayout: [
+          [0, 1, 1, 1, 0, 1, 0, 0],
+          [0, 0, 1, 0, 0, 1, 0, 0],
+          [1, 1, 1, 1, 0, 1, 1, 1],
+          [1, 0, 1, 0, 1, 0, 1, 0],
+          [1, 1, 1, 1, 1, 0, 1, 0],
+          [0, 0, 1, 0, 1, 1, 1, 1]
+        ],
+        letters: 'hoonpt'
+      };
+      let solution = solver.findWords(boardAndLetters);
+      expect(solution.words).to.have.property('3');
+      expect(solution.words[3])
+        .to.be.an('array')
+        .and.have.lengthOf(25);
+      expect(solution.words).to.have.property('4');
+      expect(solution.words[4]).to.be.an('array');
+      expect(solution.words).to.have.property('5');
+      expect(solution.words[5]).to.be.an('array');
+      done();
+    });
+  });
+
+  describe('generateCombinations', function() {
+    it('is a function', function(done) {
+      expect(typeof solver.generateCombinations).to.equal('function');
+      done();
+    });
+    it('throws an error for invalid arguments', function(done) {
+      expect(() => solver.generateCombinations('x', '[]')).to.throw();
       done();
     });
     it('returns a value', function(done) {
-      expect(solver.permutationGen('123')).to.not.equal(undefined);
+      expect(
+        solver.generateCombinations([3, 4], ['a', 'b', 'c', 'd'])
+      ).to.not.equal(undefined);
       done();
     });
     it("returns correct result for '123'", function(done) {
-      let expected = ['apple', 'appel', 'pepla'];
-      expect(solver.permutationGen('apple')).to.eql(expected);
+      let expected = {
+        3: { abc: 3, abd: 3, acd: 3, bcd: 3 },
+        4: { abcd: 4 }
+      };
+      expect(solver.generateCombinations([3, 4], ['a', 'b', 'c', 'd'])).to.eql(
+        expected
+      );
+      done();
+    });
+  });
+
+  describe('queryDictionary', function() {
+    it('is a function', function(done) {
+      expect(typeof solver.queryDictionary).to.equal('function');
+      done();
+    });
+    it('returns words given letters', function(done) {
+      expect(solver.queryDictionary('abc')).to.eql({
+        abc: 1,
+        bac: 1,
+        cab: 1
+      });
+      done();
+    });
+    it('returns words given letters', function(done) {
+      expect(solver.queryDictionary('')).to.eql(undefined);
+      done();
+    });
+  });
+
+  describe('combineBoards', function() {
+    let boardA = [
+      [1, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0]
+    ];
+    let boardB = [
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 1]
+    ];
+    it('should be a function', function(done) {
+      expect(solver.combineBoards).to.be.a('function');
+      done();
+    });
+
+    it('should return an array', function(done) {
+      expect(solver.combineBoards(boardA, boardB)).to.be.an('array');
+      done();
+    });
+
+    it('should combine simple boards', function(done) {
+      let boardA = [[0, 1], [1, 0]];
+      let boardB = [[1, 0], [0, 1]];
+      let result = solver.combineBoards(boardA, boardB);
+      let expected = [[1, 1], [1, 1]];
+      expect(result)
+        .to.be.an('array')
+        .and.to.eql(expected);
+      done();
+    });
+  });
+
+  describe('findSolutions', function() {
+    it('should be a function', function(done) {
+      expect(solver.findSolutions).to.be.a('function');
+      done();
+    });
+  });
+
+  describe('checkWordFit', function() {
+    it('should be a function', function(done) {
+      expect(solver.checkWordFit).to.be.a('function');
+      done();
+    });
+  });
+
+  describe('placeWord', function() {
+    it('should be a function', function(done) {
+      expect(solver.placeWord).to.be.a('function');
       done();
     });
   });

@@ -4,17 +4,20 @@
   "description": "Utility to solve word game puzzles",
   "main": "solver.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc mocha"
   },
   "author": "jasonstephenm@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chai-as-promised": "^7.1.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "js-combinatorics": "^0.5.4"

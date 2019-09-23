@@ -100,30 +100,24 @@ function getWords() {
 
 function displayWords(wordsObject) {
   let lengths = Object.keys(wordsObject);
-
-  // // create table
-  // var table = document.createElement('table');
-
-  // // create row for headers
-  // var tr = table.insertRow(-1);
-  // var tr2 = table.insertRow(-1);
-
-  // // push headers into table
-  // for (var i = 0; i < lengths.length; i++) {
-  //   // TABLE HEADER.
-  //   var th = document.createElement('th');
-  //   th.innerHTML = lengths[i];
-  //   tr.appendChild(th);
-  //   var td = document.createElement('td');
-  //   tr2.appendChild(td);
-  //   td.innerHTMl = wordsObject[lengths[i]].join(' ');
-  // }
-
-  // document.body.appendChild(table);
+  let resultDiv = document.getElementById('results');
+  resultDiv.innerHTML = '';
 
   for (let i = 0; i < lengths.length; i++) {
     let para = document.createElement('p');
     para.innerHTML = lengths[i] + ': ' + wordsObject[lengths[i]].join(' ');
-    document.body.appendChild(para);
+    resultDiv.appendChild(para);
+  }
+}
+
+function dragToSelect(cell) {
+  for (var i = rowStart; i <= rowEnd; i++) {
+    var rowCells = table
+      .find('tr')
+      .eq(i)
+      .find('td');
+    for (var j = cellStart; j <= cellEnd; j++) {
+      rowCells.eq(j).addClass('selected');
+    }
   }
 }

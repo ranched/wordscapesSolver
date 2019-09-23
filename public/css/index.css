@@ -1,17 +1,21 @@
 body {
   background-color: rgba(0, 0, 0, 0);
 }
-
+table {
+  border: 1px solid black;
+}
 table {
   border-collapse: collapse;
   border: 1px solid black;
-  heigth: ;
+  table-layout: fixed;
+  width: 50vw;
+  height: 50vh;
 }
 
 table td {
   border: 1px solid black;
   padding: 15px;
-  height: 0;
+  /* height: 0; */
 }
 td {
   width: 33.33%;
@@ -34,7 +38,6 @@ td .content {
 .wrapper {
   display: grid;
   grid-gap: 10px;
-  /* background-color: #fff; */
   color: #444;
 }
 
@@ -74,5 +77,5 @@ td .content {
 
 td {
   width: 10%;
-  height: 10px;
+  height: 10%;
 }

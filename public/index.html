@@ -6,8 +6,8 @@
   </head>
   <body>
     <div class="wrapper">
-      <button class="header" id="addRowTopButton">+</button>
-      <button class="left-sidebar side" id="addColumnLeftButton">+</button>
+      <button class="header" id="addRowTopButton">+ top</button>
+      <button class="left-sidebar side" id="addColumnLeftButton">+ left</button>
       <table class="content" id="crosswordTable">
         <tr>
           <td></td>
@@ -26,13 +26,17 @@
         </tr>
       </table>
 
-      <button class="right-sidebar side" id="addColumnRightButton">+</button>
-      <button class="footer" id="addRowBottomButton">+</button>
+      <button class="right-sidebar side" id="addColumnRightButton">
+        + rght
+      </button>
+      <button class="footer" id="addRowBottomButton">+ bot</button>
     </div>
     <div>
       <input id="letters" />
       <button id="findWords">find words</button>
     </div>
+    <div id="results"></div>
+
     <script type="module" src="js/index.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </body>

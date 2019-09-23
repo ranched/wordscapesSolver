@@ -1,8 +1,10 @@
 var fsPromises = require('fs').promises;
+var chai = require('chai');
 var expect = require('chai').expect;
 var assert = require('chai').assert;
-var chai = require('chai');
 chai.use(require('chai-fs'));
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
 var preprocessor = require('../wordsPreprocessor.js');
 
@@ -44,6 +46,17 @@ describe('wordsPreprocessor', function() {
         .with.content(data, 'has correct content');
 
       await fsPromises.unlink('file.json');
+    });
+
+    it('returns an error when passed invalid arguments', async function() {
+      // return preprocessor.writeObjectToFile().catch(error =>
+      //   expect(error)
+      //     .to.be.an('error')
+      //     .with.property('message', 'ERR_INVALID_ARG_TYPE')
+      // );
+      return expect(
+        preprocessor.writeObjectToFile()
+      ).to.eventually.be.rejectedWith(Error);
     });
   });
 
@@ -109,6 +122,12 @@ describe('wordsPreprocessor', function() {
         .with.content(data, 'has correct content');
 
       await fsPromises.unlink('file.json');
+    });
+
+    it('fails if not passed a filename', async function() {
+      return expect(
+        preprocessor.createOptimizedDictionary()
+      ).to.eventually.be.rejectedWith(Error);
     });
   });
 });
