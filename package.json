@@ -19,7 +19,7 @@
     "body-parser": "^1.19.0",
     "chai-as-promised": "^7.1.1",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "js-combinatorics": "^0.5.4"
   }
 }
